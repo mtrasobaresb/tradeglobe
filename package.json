@@ -1,0 +1,26 @@
+{
+  "name": "tradeglobe",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "check": "gts check",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.3",
+    "gts": "^7.0.0",
+    "typescript": "^5.6.3",
+    "vite": "^8.1.1",
+    "@types/node": "^22.7.5"
+  },
+  "dependencies": {
+    "d3": "^7.9.0",
+    "globe.gl": "^2.46.1"
+  }
+}
