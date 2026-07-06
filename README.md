@@ -17,5 +17,6 @@ An interactive 3D WebGL data visualization platform inspired by the Arms Globe p
 ### Installation & Local Development
 1. Clone the repository
 2. Install dependencies: `npm install`
-3. Run local server: `npm run dev`
-4. Lint and check style: `npm run check`
+3. Run local development server: `npm run dev`
+4. Automatically fix code formatting & styles: `npm run fix`
+5. Run type safety and style validations (CI Gate): `npm run check`
