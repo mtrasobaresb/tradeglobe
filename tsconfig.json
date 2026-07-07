@@ -9,7 +9,10 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "d3-geo": ["./node_modules/@types/d3-geo/index.d.ts"]
+    }
   },
   "include": [
     "src/**/*.ts"
