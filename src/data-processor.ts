@@ -1,37 +1,44 @@
-/** Represents a simplified bilateral trade flow between two points. */
-export interface TradeArc {
-  startLat: number;
-  startLng: number;
-  endLat: number;
-  endLng: number;
-  color: string;
-  label: string;
-}
+import {TradeRoute} from './types';
 
-/** Static placeholder dataset mapping initial geographical trades. */
-export const dummyTrades: TradeArc[] = [
+export const dummyTrades: TradeRoute[] = [
   {
-    startLat: 37.0902,
-    startLng: -95.7129,
-    endLat: 35.8617,
-    endLng: 104.1954,
-    color: '#ff4d4d',
-    label: 'US → China',
+    id: 'route-electronics-ny-lon',
+    startLat: 40.7128, // New York
+    startLng: -74.006,
+    endLat: 51.5074, // London
+    endLng: -0.1278,
+    color: '#ff4757', // Vibrant Coral/Red
+    type: 'Electronics',
+    volume: 100, // High Volume: Fast spawn rate, larger spheres
   },
   {
-    startLat: 35.8617,
-    startLng: 104.1954,
-    endLat: 51.1657,
-    endLng: 10.4515,
-    color: '#4da6ff',
-    label: 'China → Germany',
+    id: 'route-auto-tok-la',
+    startLat: 35.6762, // Tokyo
+    startLng: 139.6503,
+    endLat: 34.0522, // Los Angeles
+    endLng: -118.2437,
+    color: '#ffa502', // Neon Orange
+    type: 'Automotive',
+    volume: 200, // Medium-High Volume
   },
   {
-    startLat: 51.1657,
-    startLng: 10.4515,
-    endLat: 37.0902,
-    endLng: -95.7129,
-    color: '#33cc33',
-    label: 'Germany → US',
+    id: 'route-agri-hk-syd',
+    startLat: 22.3193, // Hong Kong
+    startLng: 114.1694,
+    endLat: -33.8688, // Sydney
+    endLng: 151.2093,
+    color: '#2ed573', // Emerald Green
+    type: 'Agriculture',
+    volume: 500, // Low Volume: Infrequent stray particles, smaller size
+  },
+  {
+    id: 'route-pharma-sing-ber',
+    startLat: 1.3521, // Singapore
+    startLng: 103.8198,
+    endLat: 52.52, // Berlin
+    endLng: 13.405,
+    color: '#1e90ff', // Electric Blue
+    type: 'Pharmaceuticals',
+    volume: 100, // Critical Heavy Lane: Dense stream of glowing cargo
   },
 ];
