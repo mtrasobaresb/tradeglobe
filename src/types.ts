@@ -38,16 +38,10 @@ export interface GlobeInstance {
   scene: () => THREE.Scene;
 }
 
-export interface RouteSpawnState {
-  route: TradeRoute;
-  accumulator: number;
-  interval: number;
-}
-export interface ActiveFlowElement {
+export interface ActiveParticle {
   id: string;
+  mesh: THREE.Mesh;
+  curve: THREE.QuadraticBezierCurve3;
   t: number;
   speed: number;
-  sector: string;
-  curve: THREE.QuadraticBezierCurve3;
-  isLarge: boolean; // Tells the custom renderer which size scale to look at
 }
