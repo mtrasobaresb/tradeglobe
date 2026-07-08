@@ -9,7 +9,7 @@ export const dummyTrades: TradeRoute[] = [
     endLng: -0.1278,
     color: '#ff4757', // Vibrant Coral/Red
     type: 'Electronics',
-    volume: 100, // High Volume: Fast spawn rate, larger spheres
+    volume: 1000, // High Volume: Fast spawn rate, larger spheres
   },
   {
     id: 'route-auto-tok-la',
@@ -19,7 +19,7 @@ export const dummyTrades: TradeRoute[] = [
     endLng: -118.2437,
     color: '#ffa502', // Neon Orange
     type: 'Automotive',
-    volume: 200, // Medium-High Volume
+    volume: 2000, // Medium-High Volume
   },
   {
     id: 'route-agri-hk-syd',
@@ -29,7 +29,7 @@ export const dummyTrades: TradeRoute[] = [
     endLng: 151.2093,
     color: '#2ed573', // Emerald Green
     type: 'Agriculture',
-    volume: 500, // Low Volume: Infrequent stray particles, smaller size
+    volume: 1000, // Low Volume: Infrequent stray particles, smaller size
   },
   {
     id: 'route-pharma-sing-ber',
@@ -39,6 +39,6 @@ export const dummyTrades: TradeRoute[] = [
     endLng: 13.405,
     color: '#1e90ff', // Electric Blue
     type: 'Pharmaceuticals',
-    volume: 100, // Critical Heavy Lane: Dense stream of glowing cargo
+    volume: 1000, // Critical Heavy Lane: Dense stream of glowing cargo
   },
 ];
