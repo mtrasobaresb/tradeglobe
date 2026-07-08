@@ -34,5 +34,5 @@ export interface FlowParticle {
   id: string;
   arc: FlowArc; // Memory pointer to the shared parent blueprint.
   t: number; // Particle's current timeline progress along the arc: 0.0 to 1.0
-  mesh?: THREE.Mesh; // Add this optional property
+  sprite?: THREE.Sprite; // Add this optional property
 }
