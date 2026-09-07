@@ -37,8 +37,7 @@ html, body {
   overflow-y: auto;
   box-sizing: border-box;
 }
-
-/* Historical Timeline Layout Component at the bottom */
+/* 
 #timeline-container {
   position: absolute;
   bottom: 20px;
@@ -56,9 +55,171 @@ html, body {
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
-}
+} */
 
 /* Clearer text presentation rule */
 h2, span {
   user-select: none;
+}
+
+/* Historical Timeline Layout Component at the bottom */
+.timeline-bar {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  
+  padding: 12px 24px 16px 20px;
+  width: min(1000px, 92vw);
+  height: 72px; /* Fixed height locks whole bar */
+  box-sizing: border-box;
+  
+  background: rgba(10, 14, 23, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  color: #e2e8f0;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.slider-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom Standardized Slider Track */
+#year-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  outline: none;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Standardized 18px Thumb for Chrome/Safari/Edge */
+#year-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 24px;
+  border-radius: 50%;
+  background: #38bdf8;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+  transition: transform 0.1s ease;
+}
+
+#year-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* Standardized 18px Thumb for Firefox */
+#year-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: #38bdf8;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+  transition: transform 0.1s ease;
+}
+
+#year-slider::-moz-range-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* Ticks Container - 9px Padding Matches 18px Thumb Radius (18/2 = 9px) */
+.slider-ticks {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 28px; /* Fixed height prevents layout shifts */
+  margin-top: 6px;
+  padding: 0 9px; /* Aligns edge ticks directly under thumb center */
+  box-sizing: border-box;
+}
+
+.tick-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 0;
+  overflow: visible;
+}
+
+.tick-mark {
+  width: 1px;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.25);
+  transition: background-color 0.15s ease, height 0.15s ease;
+}
+
+/* Absolutely position label so text scaling never impacts parent layout height */
+.tick-label {
+  position: absolute;
+  top: 8px;
+  font-size: 0.65rem;
+  font-family: monospace, system-ui, sans-serif;
+  color: #64748b;
+  white-space: nowrap;
+  transition: color 0.15s ease, font-size 0.15s ease, top 0.15s ease;
+}
+
+/* Active Tick Highlighting */
+.tick-item.active .tick-mark {
+  background-color: #38bdf8;
+  height: 12px;
+  width: 2px;
+}
+
+.tick-item.active .tick-label {
+  color: #38bdf8;
+  font-size: 0.95rem;
+  font-weight: 800;
+  top: 10px; /* Slight offset compensation for larger font size */
+}
+
+/* Compact Play/Pause Button on the Left */
+.play-btn {
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.play-btn:hover {
+  background: #38bdf8;
+  color: #0f172a;
+  transform: scale(1.05);
+}
+
+.play-btn svg {
+  fill: currentColor;
+}
+
+.hidden {
+  display: none !important;
 }

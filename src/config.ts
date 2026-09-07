@@ -1,4 +1,8 @@
 export const CONFIG = {
+  // Timeline Bounds.
+  START_YEAR: 1995,
+  END_YEAR: 2024,
+
   // Physics & Timing.
   TARGET_FPS: 60, // The frame rate baseline your speed math expects.
   PARTICLE_LIFETIME: 5.0, // How long a particle takes to traverse its arc in seconds.

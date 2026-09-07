@@ -14,6 +14,26 @@ export const TRADE_COLORS = {
   IMPORT: '#00B4D8', // Cool Cyan/Blue for Inbound
 } as const;
 
+// const tradeCsvModules = import.meta.glob('/public/data/trade_*.csv', {
+//   eager: true,
+// });
+// const yearRegex = /trade_(\d{4})\.csv$/i;
+
+// /**
+//  * Dynamic Year Discovery via Vite Glob
+//  */
+// export const AVAILABLE_YEARS: number[] = Object.keys(tradeCsvModules)
+//   .map(path => {
+//     const match = path.match(yearRegex);
+//     return match ? parseInt(match[1], 10) : null;
+//   })
+//   .filter((year): year is number => year !== null)
+//   .sort((a, b) => a - b);
+
+// export const MIN_YEAR: number = AVAILABLE_YEARS[0] ?? 1995;
+// export const MAX_YEAR: number =
+//   AVAILABLE_YEARS[AVAILABLE_YEARS.length - 1] ?? 2024;
+
 /**
  * Builds an O(1) map from Chapter ID (e.g., "08", "33") to Section ID (e.g., "I", "VI").
  */
@@ -180,4 +200,72 @@ export function getCountryTradeArcs(
 
   // 2. Slice top N items if limit is specified
   return limit ? arcs.slice(0, limit) : arcs;
+}
+
+/** In-memory cache for parsed yearly trade maps */
+const tradeMapCache = new Map<number, Map<string, BilateralTrade>>();
+
+/**
+ * Retrieves cached trade data or parses and caches new CSV text for a year.
+ */
+export function getOrProcessTradeData(
+  year: number,
+  csvText: string,
+  hsData: HsSectionsData,
+): Map<string, BilateralTrade> {
+  if (tradeMapCache.has(year)) {
+    return tradeMapCache.get(year)!;
+  }
+
+  const processedMap = processTradeCsv(csvText, hsData);
+  tradeMapCache.set(year, processedMap);
+  return processedMap;
+}
+
+/**
+ * Clears the trade cache (useful if raw datasets are reloaded dynamically).
+ */
+export function clearTradeCache(): void {
+  tradeMapCache.clear();
+}
+
+/**
+ * Master year-change processor.
+ * Filters active country polygons and updates directional trade arcs for the active selection.
+ */
+export function processYearChange(params: {
+  year: number;
+  csvText: string;
+  hsData: HsSectionsData;
+  geoJson: CountryGeoJson;
+  countries: CountriesMap;
+  selectedCountryId: string | null;
+  arcLimit?: number;
+}): {
+  activePolygons: CountryFeature[];
+  tradeMap: Map<string, BilateralTrade>;
+  arcs: TradeArc[];
+} {
+  const {
+    year,
+    csvText,
+    hsData,
+    geoJson,
+    countries,
+    selectedCountryId,
+    arcLimit,
+  } = params;
+
+  // 1. Filter GeoJSON boundaries valid for this year
+  const activePolygons = filterCountriesByYear(geoJson, year);
+
+  // 2. Parse or fetch cached trade map for this year
+  const tradeMap = getOrProcessTradeData(year, csvText, hsData);
+
+  // 3. Recalculate trade arcs if a country is currently selected
+  const arcs = selectedCountryId
+    ? getCountryTradeArcs(selectedCountryId, tradeMap, countries, arcLimit)
+    : [];
+
+  return {activePolygons, tradeMap, arcs};
 }

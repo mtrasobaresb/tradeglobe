@@ -19,13 +19,16 @@
     </div>
 
     <!-- The Horizontal Time Navigation Component -->
-    <div id="timeline-container">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span id="active-year-display" style="font-weight: bold; font-size: 1.1rem;">Year: 2018</span>
-        <button id="play-button" style="background: #c084fc; border: none; padding: 6px 16px; border-radius: 6px; cursor: pointer; color: #000; font-weight: bold;">Play</button>
+    <div id="timeline-container" class="timeline-bar">
+      <button id="play-pause-btn" class="play-btn" aria-label="Toggle Playback">
+        <svg id="play-icon" viewBox="0 0 24 24" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+        <svg id="pause-icon" viewBox="0 0 24 24" width="16" height="16" class="hidden"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </button>
+
+      <div class="slider-wrapper">
+        <input type="range" id="year-slider" min="1995" max="2024" step="1" value="2024" />
+        <div id="slider-ticks" class="slider-ticks"></div>
       </div>
-      <!-- D3 Timeline graph will sit here -->
-      <div id="timeline-chart" style="width: 100%; height: 35px;"></div>
     </div>
 
     <!-- Vite explicitly points straight to main.ts script entry -->
