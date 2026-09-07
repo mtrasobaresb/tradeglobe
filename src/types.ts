@@ -94,3 +94,33 @@ export interface TradeArc {
   partnerName: string;
   volume: number;
 }
+
+export interface CountryFeatureProperties {
+  baci_code: number;
+  baci_name: string;
+  iso3: string;
+  gw_code?: number | null;
+  geom_source: string;
+  start_year: number;
+  end_year: number;
+  center_lon: number;
+  center_lat: number;
+  alt_names?: {
+    formal_en?: string;
+    name_long?: string;
+  };
+}
+
+export interface CountryFeature {
+  type: 'Feature';
+  properties: CountryFeatureProperties;
+  geometry: {
+    type: 'Polygon' | 'MultiPolygon';
+    coordinates: number[][][] | number[][][][];
+  };
+}
+
+export interface CountryGeoJson {
+  type: 'FeatureCollection';
+  features: CountryFeature[];
+}

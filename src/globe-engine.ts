@@ -1,13 +1,16 @@
 import Globe from 'globe.gl';
 import * as THREE from 'three';
-import {TradeRoute, GlobeInstance, FlowParticle} from './types';
+import {TradeRoute, GlobeInstance, FlowParticle, CountryFeature} from './types';
+import {getTextureForYear, preloadTextures} from './texture-manager';
 import {initializePool, tickPool} from './route-flow-engine';
 import {getTintedSpriteMaterial} from './particle-material';
 import {CONFIG} from './config';
 
 // Main entry point for the globe visualization engine.
 export interface GlobeEngineAPI {
+  updateYear: (year: number) => void;
   updateRoutes: (newRoutes: TradeRoute[]) => void;
+  updatePolygons: (newPolygons: CountryFeature[]) => void;
   destroy: () => void;
 }
 
@@ -15,9 +18,17 @@ export interface GlobeEngineAPI {
 export function initGlobeEngine(
   container: HTMLElement,
   initialRoutes: TradeRoute[] = [],
+  activePolygons: CountryFeature[] = [],
+  initialYear: number = 2024,
 ): GlobeEngineAPI {
+  // Pre-cache all epoch textures immediately upon startup
+  preloadTextures();
+
+  // Resolve initial texture path for the requested year
+  let currentTexturePath = getTextureForYear(initialYear);
   // Initialize Core Globe Layout.
   const globe = new Globe(container)
+    .globeImageUrl(currentTexturePath)
     .backgroundColor('#05050a')
     .showAtmosphere(false);
 
@@ -27,6 +38,8 @@ export function initGlobeEngine(
     controls.autoRotate = false;
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
+    controls.minDistance = 125; // Distance 100 = Surface. 125 = ~0.25 altitude above surface (prevents pixelation).
+    controls.maxDistance = 500; // Prevents zooming out so far that the globe shrinks to a dot.
   }
 
   // Static structural background paths.
@@ -41,20 +54,18 @@ export function initGlobeEngine(
     .arcStroke(CONFIG.ARC_STROKE)
     .arcAltitude('altitude');
 
-  // Country vector boundaries.
-  fetch(
-    'https://raw.githubusercontent.com/vasturiano/globe.gl/master/example/datasets/ne_110m_admin_0_countries.geojson',
-  )
-    .then(res => res.json())
-    .then((countries: {features: object[]}) => {
-      globe
-        .polygonsData(countries.features)
-        .polygonCapColor(() => 'rgba(21, 32, 54, 0.4)')
-        .polygonStrokeColor(() => 'rgba(0, 0, 0, 0.15)')
-        .polygonSideColor(() => 'rgba(0, 0, 0, 0)')
-        .polygonAltitude(0.002);
-    })
-    .catch(err => console.error('Failed to stream maps:', err));
+  // Country vector boundaries configured with initial activePolygons
+  // Helper to filter out null or invalid GeoJSON features
+  // const validPolygons = (activePolygons || []).filter(
+  //   f => f && (f.geometry || f.type),
+  // );
+
+  // globe
+  //   .polygonsData(validPolygons)
+  //   .polygonCapColor(() => 'rgba(21, 32, 54, 0.4)')
+  //   .polygonStrokeColor(() => 'rgba(255, 255, 255, 0.2)')
+  //   .polygonSideColor(() => 'rgba(0, 0, 0, 0)')
+  //   .polygonAltitude(0.01);
 
   const world = globe as unknown as GlobeInstance;
 
@@ -163,8 +174,22 @@ export function initGlobeEngine(
 
   // Return the API for external control of the globe engine.
   return {
+    updateYear: (year: number) => {
+      const targetTexture = getTextureForYear(year);
+      // Only swap WebGL texture if we crossed an epoch boundary.
+      if (targetTexture !== currentTexturePath) {
+        currentTexturePath = targetTexture;
+        globe.globeImageUrl(targetTexture);
+      }
+    },
     updateRoutes: (newRoutes: TradeRoute[]) => {
       syncEngineData(newRoutes);
+    },
+    updatePolygons: (newPolygons: CountryFeature[]) => {
+      const clean = (newPolygons || []).filter(
+        f => f && (f.geometry || f.type),
+      );
+      globe.polygonsData(clean);
     },
     destroy: () => {
       window.removeEventListener('resize', handleResize);

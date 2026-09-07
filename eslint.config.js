@@ -7,6 +7,7 @@ export default [
   // Global ignore pathways (Replaces eslint.ignores.js)
   {
     ignores: [
+      '.venv/*',
       'dist/**',
       'node_modules/**',
       'vite.config.ts',

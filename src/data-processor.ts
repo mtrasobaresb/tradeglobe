@@ -1,5 +1,12 @@
 import {CONFIG} from './config';
-import {CountriesMap, HsSectionsData, BilateralTrade, TradeArc} from './types';
+import {
+  CountriesMap,
+  HsSectionsData,
+  BilateralTrade,
+  TradeArc,
+  CountryGeoJson,
+  CountryFeature,
+} from './types';
 
 /** Brand colors for single-country mode */
 export const TRADE_COLORS = {
@@ -22,6 +29,20 @@ export function buildChapterToSectionMap(
     }
   }
   return chapterToSection;
+}
+
+/**
+ * Filters GeoJSON country features active in the specified year.
+ */
+export function filterCountriesByYear(
+  geoJson: CountryGeoJson,
+  year: number,
+): CountryFeature[] {
+  return geoJson.features.filter(
+    feature =>
+      feature.properties.start_year <= year &&
+      feature.properties.end_year >= year,
+  );
 }
 
 /**
